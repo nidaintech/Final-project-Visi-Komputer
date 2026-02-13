@@ -50,12 +50,12 @@ def main():
     save_rgb_image(os.path.join(out_dir, "keypoints_img1.png"), kp_img1)
     save_rgb_image(os.path.join(out_dir, "keypoints_img2.png"), kp_img2)
 
-    # ====== MATCHING (KNN + Ratio Test lebih bagus untuk analisis) ======
+    # ====== MATCHING
     bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=False)
     knn_matches = bf.knnMatch(des1, des2, k=2)
 
     good = []
-    ratio = 0.75  # bisa kamu uji 0.7 - 0.8 untuk analisis
+    ratio = 0.75 
     for m, n in knn_matches:
         if m.distance < ratio * n.distance:
             good.append(m)
@@ -72,7 +72,7 @@ def main():
     )
     save_rgb_image(os.path.join(out_dir, "matches_top.png"), match_vis)
 
-    # ====== OPTIONAL: HOMOGRAPHY (buat bukti kuat matching) ======
+
     if len(good) >= 10:
         src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
         dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
